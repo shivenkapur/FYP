@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx babel-node --presets @babel/env index.js",
+    "dev": "npx babel-node --presets @babel/env server.js",
     "test": "npx babel-node --presets @babel/env test.js"
   },
   "author": "",
@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
+    "express": "^4.17.1",
     "google": "^2.1.0",
     "google-parser": "^2.1.4",
     "node-fetch": "^2.6.0"

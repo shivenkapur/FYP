@@ -11,7 +11,7 @@ export default async function addUrl(url, keywords){
         keywords: keywords
     };
 
-    var stringJson = JSON.stringify(urlObject);
+    let stringJson = JSON.stringify(urlObject);
     client.set(newId, stringJson);
 
     return stringJson;

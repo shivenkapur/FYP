@@ -7,19 +7,27 @@ export default {
     addUrl: async function (req, res){
         const { url, keywords } = req.body;
         const jsonReturn = await addUrl(url, keywords);
-        res.send(jsonReturn);
+        const stringJson = JSON.stringify(jsonReturn);
+
+        res.send(stringJson);
     },
     removeUrl: async function (req, res){
         const { key } = req.body;
         const jsonReturn = await removeUrl(key);
-        res.send(jsonReturn);
+
+        const stringJson = JSON.stringify(jsonReturn);
+        res.send(stringJson);
     },
     getAllKeys: async function (req, res){
         const jsonReturn = await getAllKeys();
-        res.send(jsonReturn);
+
+        const stringJson = JSON.stringify(jsonReturn);
+        res.send(stringJson);
     },
     getAllUrls: async function (req, res){
         const jsonReturn = await getAllUrls();
-        res.send(jsonReturn);
+
+        const stringJson = JSON.stringify(jsonReturn);
+        res.send(stringJson);
     }
 }

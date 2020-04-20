@@ -6,7 +6,7 @@ import getGoogleData from '../../googleSearchFunctions/getGoogleData/getGoogleDa
 export default async function getSearchData(searchKeywords, getAllData){
 
     const startIndex = 0; //increments of 10
-    const resultsPerRequest = 10;
+    const resultsPerRequest = 100;
 
     let googleUrl = await createUrl(searchKeywords, startIndex, resultsPerRequest);
 
