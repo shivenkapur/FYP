@@ -1,10 +1,21 @@
-const express = require('express')
-const app = express()
-const port = 5000
+import addUrlRoute from './routes/addUrlRoute.js';
+import removeUrl from './routes/removeUrlRoute.js';
+import getAllKeysRoute from './routes/getAllKeysRoute.js';
+import getAllUrlsRoute from './routes/getAllUrlsRoute.js';
 
-app.use('/addUrl', addUrl);
-app.use('/removeUrls', removeUrls);
-app.use('/getUrls', getUrls);
+import bodyParser from 'body-parser';
+
+const express = require('express');
+const app = express();
+const port = 8000;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/addUrl', addUrlRoute);
+app.use('/removeUrl', removeUrl);
+app.use('/getAllKeys', getAllKeysRoute);
+app.use('/getAllUrls', getAllUrlsRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'))
 

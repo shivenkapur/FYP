@@ -1,11 +1,11 @@
-import asyncRedis from '../../asyncRedis.js';
+import asyncRedis from '../asyncRedis.js';
 import databaseObjects from '../../configuration/databaseObjects.js'
 
 export default async function getUrl(key){
     
-    const client = databaseObjects.getClient();
+    const client = await databaseObjects.getClient();
     const asyncGet = await asyncRedis.get(client);
-    const urlObject = asyncGet(key);
+    const urlObject = await asyncGet(key);
 
     return urlObject;
 }
