@@ -2,7 +2,8 @@ import databaseObjects from '../../configuration/databaseObjects.js'
 
 export default async function createRelationship(idLinkFrom, idLinkTo, matchingKeywords = []){
 
-    const client = databaseObjects.getClient();
+    const client = await databaseObjects.getClient();
+
     try {
         const result = await client.writeTransaction(tx =>
             tx.run(
@@ -14,6 +15,8 @@ export default async function createRelationship(idLinkFrom, idLinkTo, matchingK
                 `
             )
         );
+
+        return result;
       } catch (error){
           console.log(error);
       }

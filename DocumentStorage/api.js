@@ -1,26 +1,29 @@
 import createNode from './storageFunctions/createNode/createNode.js';
-import setupDatabase from './storageFunctions/setupDatabase.js';
 import createRelationship from './storageFunctions/createRelationship/createRelationship.js';
 import getNodes from './storageFunctions/getNodes/getNodes.js';
-import databaseObjects from './configuration/databaseObjects.js'
 
 export default {
-    createNode: async function (id, text){
-        if(databaseObjects.getClient() == undefined){
-            await setupDatabase();
-        }
-        return await createNode(id, text);
+    createNode: async function (req, res){
+        console.log(req.body);
+        const { id, text } = req.body;
+        let jsonReturn = await createNode(id, text);
+
+        const stringJson = JSON.stringify(jsonReturn);
+        res.send(stringJson);
     },
-    createRelationship: async function (idLinkFrom, idLinkTo, matchingKeywords){
-        if(databaseObjects.getClient() == undefined){
-            await setupDatabase();
-        }
-        return await createRelationship(idLinkFrom, idLinkTo, matchingKeywords);
+    createRelationship: async function (req, res){
+
+        console.log(req.body);
+        const { idLinkFrom, idLinkTo , matchingKeywords} = req.body;
+        let jsonReturn = createRelationship(idLinkFrom, idLinkTo, matchingKeywords);
+
+        const stringJson = JSON.stringify(jsonReturn);
+        res.send(stringJson);
     },
-    getNodes: async function (){
-        if(databaseObjects.getClient() == undefined){
-            await setupDatabase();
-        }
-        return await getNodes();
+    getNodes: async function (req, res){
+        let jsonReturn = await getNodes();
+
+        const stringJson = JSON.stringify(jsonReturn);
+        res.send(stringJson);
     }
 }

@@ -2,7 +2,7 @@ import databaseObjects from '../../configuration/databaseObjects.js'
 
 export default async function createNode(id, text){
 
-    const client = databaseObjects.getClient();
+    const client = await databaseObjects.getClient();
     try {
         const result = await client.writeTransaction(tx =>
             tx.run(

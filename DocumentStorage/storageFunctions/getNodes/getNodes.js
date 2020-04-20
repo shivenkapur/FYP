@@ -2,7 +2,7 @@ import databaseObjects from '../../configuration/databaseObjects.js'
 
 export default async function getNodes(){
 
-    const client = databaseObjects.getClient();
+    const client = await databaseObjects.getClient();
     try {
         const result = await client.writeTransaction(tx =>
             tx.run(
@@ -12,7 +12,7 @@ export default async function getNodes(){
             )
         );
 
-        console.log(result.records);
+        return result.records;
       } catch (error){
           console.log(error);
       }
