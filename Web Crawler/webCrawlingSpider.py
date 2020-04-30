@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import requests 
 import threading 
 from twisted.internet import reactor
+import json
 
 class WebCrawler(scrapy.Spider):
 	
@@ -15,8 +16,6 @@ class WebCrawler(scrapy.Spider):
 	number_of_pages_scraped = 0
 
 	def parse(self, response):
-
-		print("Link::::::::::::" + start_urls[0])
 		
 		if(response.status == 200):
 	 		# Extract the hrefs from initial google results
@@ -32,7 +31,7 @@ class WebCrawler(scrapy.Spider):
 
 			#print(hyperlinks)
 
-			# kill all script and style elements
+			# Kill all script and style elements
 			for script in soup(["script", "style"]):
 				script.decompose()    # rip it out
 
@@ -53,17 +52,27 @@ class WebCrawler(scrapy.Spider):
 
 def main(message):
 
-	# Running WebCrawler spider from the script instead of the terminal
-	response = requests.get('http://www.google.com/search?q=amazon+strengths/')
+	print(message)
 
-	soup = BeautifulSoup(response.text, 'html.parser')
+	json_data = json.loads(message['data'])
+
 	initialGoogleLinks = []
 
-	for link in soup.find_all('a'):
-		temp = link.get('href')
-		if(temp.startswith('/url?q=')):
-			stop = temp.find('&')					# Extracting appropriate URLs
-			initialGoogleLinks.append(temp[7:stop])
+	for link in json_data:
+		link_url = link['url']
+		if(link_url.startswith('/url?q=')):
+			stop = link_url.find('&')					# Extracting appropriate URLs
+			initialGoogleLinks.append(link_url[7:stop])
+
+	# # Running WebCrawler spider from the script instead of the terminal
+	# response = requests.get('http://www.google.com/search?q=amazon+strengths/')
+	
+
+	# for link in soup.find_all('a'):
+	# 	temp = link.get('href')
+	# 	if(temp.startswith('/url?q=')):
+	# 		stop = temp.find('&')					# Extracting appropriate URLs
+	# 		initialGoogleLinks.append(temp[7:stop])
 	
 	runner = CrawlerRunner()
 

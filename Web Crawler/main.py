@@ -7,6 +7,6 @@ def callbackURLQueue(message):
 if __name__ == '__main__':	
 
 	pubSub.subscribe('urlQueue', callbackURLQueue)
-	pubSub.publish('urlQueue', 'Published to UrlQueue')
+	#pubSub.publish('urlQueue', 'Published to UrlQueue')
 	print("Subscribe 2:")
 	# pubSub.publish('urlQueue', 'Hello')
