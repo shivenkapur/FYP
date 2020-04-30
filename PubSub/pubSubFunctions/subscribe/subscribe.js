@@ -1,12 +1,8 @@
 var redis = require("redis")
-  , subscriber = redis.createClient()
-  , client = redis.createClient();
+  , subscriber = redis.createClient();
   
-export default async function publish(){
+export default async function subscribe(channel, callback){
 
-    subscriber.on("message", function(channel, message) {
-        console.log("Message: " + message + " Channel:" + channel);
-      });
-      
-    subscriber.subscribe("temp-reading:living-room");
+    subscriber.on("message", callback);
+    subscriber.subscribe(channel);
 }

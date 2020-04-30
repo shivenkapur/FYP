@@ -1,12 +1,12 @@
-import publish from './pubSubFunctions/publish/publish.js';
-import subscribe from './pubSubFunctions/subscribe/subscribe.js';
-
+import api from './api';
 async function test(){
 
-    let response = await subscribe();
+    let response = await api.subscribe("urlQueue", function(channel, message){
+        console.log(channel, message);
+    });
     console.log(response);
 
-    response = await publish("temp-reading:living-room", "Yeh hain sadda message!");
+    response = await api.publish("urlQueue", "Niente");
     console.log(response);   
 
 }
