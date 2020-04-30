@@ -1,24 +1,27 @@
 {
   "name": "urlqueue",
   "version": "1.0.0",
-  "description": "",
+  "description": "Each Url object has 1. An id 2. the url itself 3. Page title 4. 5 keywords most closesly describing the article",
   "main": "api.js",
   "scripts": {
     "dev": "npx babel-node --presets @babel/env server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel": "^6.23.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "redis": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.6",
-    "@babel/node": "^7.0.0",
-    "@babel/preset-env": "^7.1.6",
-    "@babel/plugin-transform-runtime": "^7.9.0"
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "babel-cli": "^6.26.0"
   }
 }
