@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import requests
 import threading
 from twisted.internet import reactor
+import json
 
 
 class WebCrawler(scrapy.Spider):
@@ -53,19 +54,28 @@ class WebCrawler(scrapy.Spider):
 
 def main(message):
 
-    # Running WebCrawler spider from the script instead of the terminal
-    response = requests.get('http://www.google.com/search?q=amazon+strengths/')
+	print(message)
 
-    soup = BeautifulSoup(response.text, 'html.parser')
-    initialGoogleLinks = []
+	json_data = json.loads(message['data'])
 
-    for link in soup.find_all('a'):
-        temp = link.get('href')
-        if(temp.startswith('/url?q=')):
-            stop = temp.find('&')					# Extracting appropriate URLs
-            initialGoogleLinks.append(temp[7:stop])
+	initialGoogleLinks = []
 
-    runner = CrawlerRunner()
+	for link in json_data:
+		link_url = link['url']
+		if(link_url.startswith('/url?q=')):
+			stop = link_url.find('&')					# Extracting appropriate URLs
+			initialGoogleLinks.append(link_url[7:stop])
+
+	# # Running WebCrawler spider from the script instead of the terminal
+	# response = requests.get('http://www.google.com/search?q=amazon+strengths/')
+
+	# for link in soup.find_all('a'):
+	# 	temp = link.get('href')
+	# 	if(temp.startswith('/url?q=')):
+	# 		stop = temp.find('&')					# Extracting appropriate URLs
+	# 		initialGoogleLinks.append(temp[7:stop])
+
+	runner = CrawlerRunner()
 
     for link in initialGoogleLinks:
         runner.crawl(WebCrawler, start_urls=[link])
