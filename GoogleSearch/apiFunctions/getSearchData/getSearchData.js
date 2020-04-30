@@ -1,7 +1,6 @@
 import createUrl from '../../googleSearchFunctions/createUrl/createUrl.js';
 import makeRequest from '../../googleSearchFunctions/makeRequest/makeRequest.js';
-import getGoogleData from '../../googleSearchFunctions/getGoogleData/getGoogleData.js'
-
+import getGoogleData from '../../googleSearchFunctions/getGoogleData/getGoogleData.js';
 
 export default async function getSearchData(searchKeywords, getAllData){
 
@@ -13,6 +12,7 @@ export default async function getSearchData(searchKeywords, getAllData){
     let html = await makeRequest(googleUrl);
 
     let searchData = await getGoogleData(html, getAllData);
+
 
     return searchData;
 }
