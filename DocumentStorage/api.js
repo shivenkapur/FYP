@@ -3,27 +3,22 @@ import createRelationship from './storageFunctions/createRelationship/createRela
 import getNodes from './storageFunctions/getNodes/getNodes.js';
 
 export default {
-    createNode: async function (req, res){
-        console.log(req.body);
-        const { id, text } = req.body;
+    createNode: async function (id, text){
         let jsonReturn = await createNode(id, text);
 
         const stringJson = JSON.stringify(jsonReturn);
-        res.send(stringJson);
     },
-    createRelationship: async function (req, res){
-
-        console.log(req.body);
-        const { idLinkFrom, idLinkTo , matchingKeywords} = req.body;
+    createRelationship: async function (idLinkFrom, idLinkTo , matchingKeywords){
         let jsonReturn = createRelationship(idLinkFrom, idLinkTo, matchingKeywords);
 
         const stringJson = JSON.stringify(jsonReturn);
-        res.send(stringJson);
     },
-    getNodes: async function (req, res){
+    getNodes: async function (){
         let jsonReturn = await getNodes();
 
         const stringJson = JSON.stringify(jsonReturn);
-        res.send(stringJson);
+    },
+    getUrlLinkage: async function(){
+        
     }
 }
