@@ -12,24 +12,24 @@ import pubSub
 
 class WebCrawler(scrapy.Spider):
 
-    name = 'webCrawler'
-    start_urls = []
-    allowed_domains = []
-    number_of_pages_scraped = 0
+	name = 'webCrawler'
+	start_urls = []
+	allowed_domains = []
+	number_of_pages_scraped = 0
 
-    def parse(self, response):
+	def parse(self, response):
 
-        if(response.status == 200):
-            # Extract the hrefs from initial google results
-            soup = BeautifulSoup(response.text, 'html.parser')
+		if(response.status == 200):
+			# Extract the hrefs from initial google results
+			soup = BeautifulSoup(response.text, 'html.parser')
 
-            # Feed them into the URL Queue
-            hyperlinks = []
+			# Feed them into the URL Queue
+			hyperlinks = []
 
-            for link in soup.find_all('a'):
-                if(link.get('href') is not None):
-                    if(link.get('href').startswith('http')):
-                        hyperlinks.append(link.get('href'))
+			for link in soup.find_all('a'):
+				if(link.get('href') is not None):
+					if(link.get('href').startswith('http')):
+						hyperlinks.append(link.get('href'))
 
 			# Kill all script and style elements
 			for script in soup(["script", "style"]):
@@ -39,8 +39,6 @@ class WebCrawler(scrapy.Spider):
 			pageText = soup.get_text()
 			#print(pageText)
 
-			# Publish extracted text to Document Storage
-			pubSub.publish('documentStorage', pageText)
 
 			# Publish extracted text to Classifier in order to check its relevance
 
@@ -49,8 +47,8 @@ class WebCrawler(scrapy.Spider):
 
 			
 
-			# Publish related URLs to Document Linkage
-			pubSub.publish('documentLinkage', str({response.url: hyperlinks}))
+			# Publish related URLs and extracted text to Document Data
+			pubSub.publish('documentData', str({'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))
 
 			# Publish the extracted hyperlinks to URL queue
 
@@ -66,26 +64,26 @@ class WebCrawler(scrapy.Spider):
 
 
 
-            print(pageText)
+			print(pageText)
 
-            if(self.number_of_pages_scraped > 100):		# Stopping condition
-                raise CloseSpider('Sufficient pages scraped')
+			if(self.number_of_pages_scraped > 100):		# Stopping condition
+				raise CloseSpider('Sufficient pages scraped')
 
-            # Creation of new spiders for a url from URL queue through script
-            for url in hyperlinks:
-                self.number_of_pages_scraped += 1
-                yield scrapy.Request(url, self.parse)
+			# Creation of new spiders for a url from URL queue through script
+			for url in hyperlinks:
+				self.number_of_pages_scraped += 1
+				yield scrapy.Request(url, self.parse)
 
 
 def main(message):
 
 	#print(message)
 	json_data = json.loads(message['data'])
-    print(message)
+	print(message)
 
-    json_data = json.loads(message['data'])
+	json_data = json.loads(message['data'])
 
-    initialGoogleLinks = []
+	initialGoogleLinks = []
 
 	for link in json_data:
 		link_url = link['url']
@@ -95,9 +93,9 @@ def main(message):
 	
 	runner = CrawlerRunner()
 
-    for link in initialGoogleLinks:
-        runner.crawl(WebCrawler, start_urls=[link])
+	for link in initialGoogleLinks:
+		runner.crawl(WebCrawler, start_urls=[link])
 
-    d = runner.join()
-    d.addBoth(lambda _: reactor.stop())
-    reactor.run()
+	d = runner.join()
+	d.addBoth(lambda _: reactor.stop())
+	reactor.run()
