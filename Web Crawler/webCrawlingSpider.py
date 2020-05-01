@@ -7,6 +7,7 @@ import requests
 import threading 
 from twisted.internet import reactor
 import json
+import pubSub
 
 class WebCrawler(scrapy.Spider):
 	
@@ -33,14 +34,38 @@ class WebCrawler(scrapy.Spider):
 
 			# Kill all script and style elements
 			for script in soup(["script", "style"]):
-				script.decompose()    # rip it out
+				script.decompose()    # Rip it out
 
 			# Extract the normal text and put it into the Document Storage database
 			pageText = soup.get_text()
+			#print(pageText)
 
-			# Publish extracted text
+			# Publish extracted text to Document Storage
+			pubSub.publish('documentStorage', pageText)
 
-			print(pageText)
+			# Publish extracted text to Classifier in order to check its relevance
+
+
+			# Subscribe the crawler to Classifier for return of relevance result
+
+			
+
+			# Publish related URLs to Document Linkage
+			pubSub.publish('documentLinkage', str({response.url: hyperlinks}))
+
+			# Publish the extracted hyperlinks to URL queue
+
+
+
+
+			# Subscribe the crawler to Classifier for new keywords
+
+
+
+
+			# Publish to Google Search the new keywords
+
+
 
 			if(self.number_of_pages_scraped > 100):		# Stopping condition
 				raise CloseSpider('Sufficient pages scraped')
@@ -52,8 +77,7 @@ class WebCrawler(scrapy.Spider):
 
 def main(message):
 
-	print(message)
-
+	#print(message)
 	json_data = json.loads(message['data'])
 
 	initialGoogleLinks = []
@@ -63,16 +87,6 @@ def main(message):
 		if(link_url.startswith('/url?q=')):
 			stop = link_url.find('&')					# Extracting appropriate URLs
 			initialGoogleLinks.append(link_url[7:stop])
-
-	# # Running WebCrawler spider from the script instead of the terminal
-	# response = requests.get('http://www.google.com/search?q=amazon+strengths/')
-	
-
-	# for link in soup.find_all('a'):
-	# 	temp = link.get('href')
-	# 	if(temp.startswith('/url?q=')):
-	# 		stop = temp.find('&')					# Extracting appropriate URLs
-	# 		initialGoogleLinks.append(temp[7:stop])
 	
 	runner = CrawlerRunner()
 

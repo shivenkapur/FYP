@@ -8,5 +8,5 @@ if __name__ == '__main__':
 
 	pubSub.subscribe('urlQueue', callbackURLQueue)
 	#pubSub.publish('urlQueue', 'Published to UrlQueue')
-	print("Subscribe 2:")
+	print("Subscribed to URL Queue")
 	# pubSub.publish('urlQueue', 'Hello')
