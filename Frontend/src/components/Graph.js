@@ -7,10 +7,10 @@ import {
     "nodes": [
       {
         "id": 1,
-        "title": "Node A",
+        "title": <div><textarea id="w3mission" rows="4" cols="50"> sakjdlajds </textarea>kjkhjk</div>,
         "x": 258.3976135253906,
         "y": 331.9783248901367,
-        "type": "empty"
+        "type": "custom"
       },
       {
         "id": 2,
@@ -54,16 +54,19 @@ import {
         shapeId: "#empty", // relates to the type property of a node
         shape: (
           <symbol viewBox="0 0 100 100" id="empty" key="0">
-            <circle cx="50" cy="50" r="45"></circle>
+            <circle cx="50" cy="50" r="45">
+            </circle>
           </symbol>
         )
       },
       custom: { // required to show empty nodes
-        typeText: "Custom",
+        typeText: <div> askdjsald </div>,
         shapeId: "#custom", // relates to the type property of a node
         shape: (
           <symbol viewBox="0 0 50 25" id="custom" key="0">
-            <ellipse cx="50" cy="25" rx="50" ry="25"></ellipse>
+            <ellipse cx="50" cy="25" rx="50" ry="25">
+              <textarea id="w3mission" rows="4" cols="50" />
+            </ellipse>
           </symbol>
         )
       }

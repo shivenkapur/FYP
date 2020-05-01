@@ -54,28 +54,28 @@ class WebCrawler(scrapy.Spider):
 
 def main(message):
 
-	print(message)
+    print(message)
 
-	json_data = json.loads(message['data'])
+    json_data = json.loads(message['data'])
 
-	initialGoogleLinks = []
+    initialGoogleLinks = []
 
-	for link in json_data:
-		link_url = link['url']
-		if(link_url.startswith('/url?q=')):
-			stop = link_url.find('&')					# Extracting appropriate URLs
-			initialGoogleLinks.append(link_url[7:stop])
+    for link in json_data:
+        link_url = link['url']
+        if(link_url.startswith('/url?q=')):
+            stop = link_url.find('&')					# Extracting appropriate URLs
+            initialGoogleLinks.append(link_url[7:stop])
 
-	# # Running WebCrawler spider from the script instead of the terminal
-	# response = requests.get('http://www.google.com/search?q=amazon+strengths/')
+    # # Running WebCrawler spider from the script instead of the terminal
+    # response = requests.get('http://www.google.com/search?q=amazon+strengths/')
 
-	# for link in soup.find_all('a'):
-	# 	temp = link.get('href')
-	# 	if(temp.startswith('/url?q=')):
-	# 		stop = temp.find('&')					# Extracting appropriate URLs
-	# 		initialGoogleLinks.append(temp[7:stop])
+    # for link in soup.find_all('a'):
+    # 	temp = link.get('href')
+    # 	if(temp.startswith('/url?q=')):
+    # 		stop = temp.find('&')					# Extracting appropriate URLs
+    # 		initialGoogleLinks.append(temp[7:stop])
 
-	runner = CrawlerRunner()
+    runner = CrawlerRunner()
 
     for link in initialGoogleLinks:
         runner.crawl(WebCrawler, start_urls=[link])
