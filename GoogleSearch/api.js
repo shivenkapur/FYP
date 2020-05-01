@@ -4,7 +4,6 @@ import pubsub from 'pubsub';
 export default {
     getAllLinks: async function (searchKeywords){
         let jsonReturn = await getSearchData(searchKeywords, false);
-
         const stringJson = JSON.stringify(jsonReturn);
         pubsub.publish("urlQueue", stringJson);
         

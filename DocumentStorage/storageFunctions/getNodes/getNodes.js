@@ -13,8 +13,8 @@ export default async function getNodes(){
         );
 
         return result.records;
-      } catch (error){
-          console.log(error);
+      } finally {
+        client.close();
       }
 }
 

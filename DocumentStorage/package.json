@@ -17,7 +17,7 @@
     "@babel/plugin-transform-runtime": "^7.9.0"
   },
   "scripts": {
-    "dev": "npx babel-node --presets @babel/env server.js",
+    "dev": "npx babel-node --presets @babel/env start.js",
     "test": "npx babel-node --presets @babel/env test.js"
   },
   "author": "",

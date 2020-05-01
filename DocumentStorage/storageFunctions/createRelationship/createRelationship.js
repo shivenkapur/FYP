@@ -17,7 +17,7 @@ export default async function createRelationship(idLinkFrom, idLinkTo, matchingK
         );
 
         return result;
-      } catch (error){
-          console.log(error);
+      } finally {
+        client.close();
       }
 }

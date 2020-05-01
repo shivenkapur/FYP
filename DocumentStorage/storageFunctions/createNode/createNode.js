@@ -2,6 +2,7 @@ import databaseObjects from '../../configuration/databaseObjects.js'
 
 export default async function createNode(id, text){
 
+    console.log(id)
     const client = await databaseObjects.getClient();
     try {
         const result = await client.writeTransaction(tx =>
@@ -19,7 +20,7 @@ export default async function createNode(id, text){
         const docId = singleRecord.get(0)
       
         console.log(docId)
-      } catch (error){
-          console.log(error);
+      } finally {
+        client.close();
       }
 }

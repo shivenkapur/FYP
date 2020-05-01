@@ -7,9 +7,9 @@ export default async function start(searchKeywords){
         console.log(channel, message);
     });
     
-    let data = await api.getAllLinks('Why is coronavirus so stupid?');
+    let data = await api.getAllLinks('Node.js');
 
-    data = await api.getAllMetaData('Help me corona');
+    console.log(data)
     
 }
 

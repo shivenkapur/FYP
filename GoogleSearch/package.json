@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "google": "^2.1.0",
     "google-parser": "^2.1.4",
+    "https-proxy-agent": "^5.0.0",
     "node-fetch": "^2.6.0",
     "pubsub": "file:../PubSub/prod"
   },

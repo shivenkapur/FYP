@@ -43,7 +43,7 @@ function _setupDatabase() {
 
           case 8:
             connectStatus = _context.sent;
-            console.log("Connected: ", connectStatus);
+            console.log("Connected: askjhaskdh ", connectStatus);
             /*connectStatus = await asyncOn('error');
             console.log("Error: ", connectStatus);*/
 

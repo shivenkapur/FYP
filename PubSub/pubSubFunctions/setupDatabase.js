@@ -8,7 +8,7 @@ export default async function setupDatabase(){
     const asyncOn = await asyncRedis.on(client);
 
     let connectStatus = await asyncOn('connect');
-    console.log("Connected: ", connectStatus);
+    console.log("Connected: askjhaskdh ", connectStatus);
 
 
     /*connectStatus = await asyncOn('error');
