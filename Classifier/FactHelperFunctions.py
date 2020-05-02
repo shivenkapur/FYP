@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 13 18:31:13 2019
-
-@author: eshaankapur
-"""
 
 import en_core_web_sm
 nlp = en_core_web_sm.load()
