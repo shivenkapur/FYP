@@ -5,3 +5,5 @@ function start(){
 }   
 
 start();
+
+//MATCH (n) DETACH DELETE n;
