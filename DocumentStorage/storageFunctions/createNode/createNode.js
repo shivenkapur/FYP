@@ -1,26 +1,12 @@
-import databaseObjects from '../../configuration/databaseObjects.js'
+export default function createNode(id, text){
 
-export default async function createNode(id, text){
+    return {
+        "statement" : `OPTIONAL MATCH (doc: Document) WHERE doc.id = $id
+            FOREACH (_ IN CASE WHEN doc IS NULL THEN [true] ELSE [] END |
+            CREATE (docnew:Document) 
+            SET docnew.id = $id)`,
+        "parameters": { "id": `${id}` }
+      };
 
-    console.log(id)
-    const client = await databaseObjects.getClient();
-    try {
-        const result = await client.writeTransaction(tx =>
-            tx.run(
-                `
-                    CREATE (doc:Document) 
-                    SET doc.id = $id , doc.text = $text
-                    RETURN doc.id + ", from node " + id(doc)
-                `,
-                { id: `${id}` , text: `${text}`}
-            )
-        );
-      
-        const singleRecord = result.records[0]
-        const docId = singleRecord.get(0)
-      
-        console.log(docId)
-      } finally {
-        client.close();
-      }
 }
+

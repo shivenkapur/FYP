@@ -2,39 +2,33 @@ import createNode from './storageFunctions/createNode/createNode.js';
 import createRelationship from './storageFunctions/createRelationship/createRelationship.js';
 import getNodes from './storageFunctions/getNodes/getNodes.js';
 import pubsub from 'pubsub';
-import { link } from 'fs';
+
+import stackTransactions from './storageFunctions/stackTransactions.js';
+import sendTransactions from './storageFunctions/sendTransactions.js'
 export default {
-    createNode: async function (id, text){
-        let jsonReturn = await createNode(id, text);
-
-        const stringJson = JSON.stringify(jsonReturn);
-    },
-    createRelationship: async function (idLinkFrom, idLinkTo , matchingKeywords = []){
-        let jsonReturn = createRelationship(idLinkFrom, idLinkTo, matchingKeywords);
-
-        const stringJson = JSON.stringify(jsonReturn);
-    },
-    getNodes: async function (){
-        let jsonReturn = await getNodes();
-
-        const stringJson = JSON.stringify(jsonReturn);
-    },
     getUrlLinkage: async function(){
-        pubsub.subscribe('documentData', (channel, message) => {
+        
+        pubsub.subscribe('documentData', async (channel, message) => {
 
             message = JSON.parse(message);
-            console.log(typeof(message));
-            this.createNode(message['url'], message['pageText']);
-            
+
+            let transactions = [];
+
+            transactions.push(createNode(message['url'], message['pageText']));
+
+
             let linkedTo = message['linkedTo'];
 
             for(let linkIndex in linkedTo){
                 let link = linkedTo[linkIndex];
-                this.createNode(link, "");
-                this.createRelationship(message['url'], link);
+                transactions.push(createNode(link, ""));
+                transactions.push(createRelationship(message['url'], link));
             }
-            
+
+            let statements = stackTransactions(transactions);
+            console.log(statements);
+            sendTransactions(statements);
         });
-        
+        console.log("Subscribed to Document Data");
     }
 }
