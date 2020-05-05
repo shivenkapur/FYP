@@ -47,11 +47,7 @@ class NodeText extends React.Component<INodeTextProps> {
     const typeText = this.getTypeText(data, nodeTypes);
 
     return (
-      <foreignObject x={0} y={0} width={200} height={100}>
-          <div className="tooltip__fo">
-            <textArea />
-          </div>
-      </foreignObject>
+      <div></div>
     );
   }
 }

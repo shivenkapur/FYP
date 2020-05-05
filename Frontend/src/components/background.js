@@ -43,7 +43,7 @@ class Background extends React.Component<IBackgroundProps> {
         y={-(gridSize || 0) / 4}
         width={gridSize}
         height={gridSize}
-        fill={`url(${backgroundFillId || ''})`}
+        fill={`url(${backgroundFillId || ''}) white`}
       />
     );
   }

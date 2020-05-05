@@ -37,6 +37,13 @@ export const COMPLEX_CIRCLE_TYPE = 'complexCircle';
 export const nodeTypes = [EMPTY_TYPE, POLY_TYPE, SPECIAL_TYPE, SKINNY_TYPE];
 export const edgeTypes = [EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE];
 
+
+const SkinnyShape = (
+  <symbol viewBox="0 0 154 54" width="154" height="54" id="skinny">
+    <rect x="0" y="0" rx="2" ry="2" width="154" height="54" />
+  </symbol>
+);
+
 const EmptyNodeShape = (
   <symbol viewBox="0 0 154 154" width="154" height="154" id="emptyNode">
     <circle cx="77" cy="77" r="76" />
@@ -72,11 +79,6 @@ const ComplexCircleShape = (
   </symbol>
 );
 
-const SkinnyShape = (
-  <symbol viewBox="0 0 154 54" width="154" height="54" id="skinny">
-    <rect x="0" y="0" rx="2" ry="2" width="154" height="54" />
-  </symbol>
-);
 
 const SpecialChildShape = (
   <symbol viewBox="0 0 154 154" id="specialChild">

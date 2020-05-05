@@ -7,7 +7,7 @@ export default async function getSearchData(html, allData){
     let searchCards = $('#b_results');
     let searchData = [];
 
-    let children = [Array.from(searchCards.children())[0]];
+    let children = Array.from(searchCards.children());
     children.forEach((element) => {
         let url = $('.b_algo > .b_title > h2 > a', element).attr('href');
         if(url != undefined){
