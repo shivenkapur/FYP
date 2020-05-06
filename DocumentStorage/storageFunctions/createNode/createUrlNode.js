@@ -1,4 +1,4 @@
-export default function createNode(id, text){
+export default function createUrlNode(id, text){
 
     return {
         "statement" : `OPTIONAL MATCH (doc: Document) WHERE doc.id = $id

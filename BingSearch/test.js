@@ -8,8 +8,6 @@ export default async function start(searchKeywords){
     });
     
     let data = await api.getAllMetaData('AWS');
-
-    console.log(data)
     
 }
 
