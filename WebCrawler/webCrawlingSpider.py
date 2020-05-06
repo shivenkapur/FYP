@@ -48,15 +48,14 @@ class WebCrawler(scrapy.Spider):
             # pubSub.publish('documentData', json.dumps(
             #     {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))C
 
+            print(response.url)
             # Publish the extracted hyperlinks to URL queue
 
             # Subscribe the crawler to Classifier for new keywords
 
             # Publish to Google Search the new keywords
 
-            print(pageText)
-
-            if(self.number_of_pages_scraped > 100):		# Stopping condition
+            if(self.number_of_pages_scraped > 10):		# Stopping condition
                 raise CloseSpider('Sufficient pages scraped')
                 
                 # Send a stopping signal for the subscription of Web Crawler

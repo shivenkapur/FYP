@@ -7,9 +7,7 @@ export default async function start(searchKeywords){
         console.log(channel, message);
     });
     
-    let data = await api.getAllMetaData('Node.js');
-
-    console.log(data)
+    let data = await api.getAllMetaData('AWS');
     
 }
 

@@ -23,64 +23,7 @@ import Edge from './edge';
 import GraphUtils from '../utilities/graph-util';
 import NodeText from './node-text';
 
-export type IPoint = {
-  x: number,
-  y: number,
-};
-
-export type INode = {
-  title: string,
-  x?: number | null,
-  y?: number | null,
-  type?: string | null,
-  subtype?: string | null,
-  [key: string]: any,
-};
-
-type INodeProps = {
-  data: INode,
-  id: string,
-  nodeTypes: any, // TODO: make a nodeTypes interface
-  nodeSubtypes: any, // TODO: make a nodeSubtypes interface
-  opacity?: number,
-  nodeKey: string,
-  nodeSize?: number,
-  onNodeMouseEnter: (event: any, data: any, hovered: boolean) => void,
-  onNodeMouseLeave: (event: any, data: any) => void,
-  onNodeMove: (point: IPoint, id: string, shiftKey: boolean) => void,
-  onNodeSelected: (
-    data: any,
-    id: string,
-    shiftKey: boolean,
-    event?: any
-  ) => void,
-  onNodeUpdate: (point: IPoint, id: string, shiftKey: boolean) => void,
-  renderNode?: (
-    nodeRef: any,
-    data: any,
-    id: string,
-    selected: boolean,
-    hovered: boolean
-  ) => any,
-  renderNodeText?: (data: any, id: string | number, isSelected: boolean) => any,
-  isSelected: boolean,
-  layoutEngine?: any,
-  viewWrapperElem: HTMLDivElement,
-  centerNodeOnMove: boolean,
-  maxTitleChars: number,
-};
-
-type INodeState = {
-  hovered: boolean,
-  x: number,
-  y: number,
-  selected: boolean,
-  mouseDown: boolean,
-  drawingEdge: boolean,
-  pointerOffset: ?{ x: number, y: number },
-};
-
-class Node extends React.Component<INodeProps, INodeState> {
+class Node extends React.Component {
   static defaultProps = {
     isSelected: false,
     nodeSize: 154,
@@ -103,10 +46,7 @@ class Node extends React.Component<INodeProps, INodeState> {
     centerNodeOnMove: true,
   };
 
-  static getDerivedStateFromProps(
-    nextProps: INodeProps,
-    prevState: INodeState
-  ) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     return {
       selected: nextProps.isSelected,
       x: nextProps.data.x,
@@ -114,10 +54,8 @@ class Node extends React.Component<INodeProps, INodeState> {
     };
   }
 
-  nodeRef: any;
-  oldSibling: any;
 
-  constructor(props: INodeProps) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -149,7 +87,7 @@ class Node extends React.Component<INodeProps, INodeState> {
       .call(dragFunction);
   }
 
-  handleMouseMove = (event: any) => {
+  handleMouseMove = (event) => {
     const mouseButtonDown = event.sourceEvent.buttons === 1;
     const shiftKey = event.sourceEvent.shiftKey;
     const {
@@ -221,7 +159,7 @@ class Node extends React.Component<INodeProps, INodeState> {
     );
   };
 
-  handleDragEnd = (event: any) => {
+  handleDragEnd = (event) => {
     if (!this.nodeRef.current) {
       return;
     }
@@ -243,6 +181,10 @@ class Node extends React.Component<INodeProps, INodeState> {
       );
     }
 
+    //focus textarea
+    console.log(event.sourceEvent.srcElement)
+    event.sourceEvent.srcElement.focus();
+
     const shiftKey = sourceEvent.shiftKey;
 
     onNodeUpdate({ x, y }, data[nodeKey], shiftKey || drawingEdge);
@@ -250,7 +192,7 @@ class Node extends React.Component<INodeProps, INodeState> {
     onNodeSelected(data, data[nodeKey], shiftKey || drawingEdge, sourceEvent);
   };
 
-  handleMouseOver = (event: any) => {
+  handleMouseOver = (event) => {
     // Detect if mouse is already down and do nothing.
     let hovered = false;
 
@@ -262,7 +204,7 @@ class Node extends React.Component<INodeProps, INodeState> {
     this.props.onNodeMouseEnter(event, this.props.data, hovered);
   };
 
-  handleMouseOut = (event: any) => {
+  handleMouseOut = (event) => {
     // Detect if mouse is already down and do nothing. Sometimes the system lags on
     // drag and we don't want the mouseOut to fire while the user is moving the
     // node around
@@ -271,7 +213,7 @@ class Node extends React.Component<INodeProps, INodeState> {
     this.props.onNodeMouseLeave(event, this.props.data);
   };
 
-  static getNodeTypeXlinkHref(data: INode, nodeTypes: any) {
+  static getNodeTypeXlinkHref(data, nodeTypes) {
     if (data.type && nodeTypes[data.type]) {
       return nodeTypes[data.type].shapeId;
     } else if (nodeTypes.emptyNode) {
@@ -281,7 +223,7 @@ class Node extends React.Component<INodeProps, INodeState> {
     return null;
   }
 
-  static getNodeSubtypeXlinkHref(data: INode, nodeSubtypes?: any) {
+  static getNodeSubtypeXlinkHref(data, nodeSubtypes) {
     if (data.subtype && nodeSubtypes && nodeSubtypes[data.subtype]) {
       return nodeSubtypes[data.subtype].shapeId;
     } else if (nodeSubtypes && nodeSubtypes.emptyNode) {
@@ -291,6 +233,35 @@ class Node extends React.Component<INodeProps, INodeState> {
     return null;
   }
 
+  getDimensions() {
+      const { data, nodeTypes } = this.props;
+      const props = {
+        height: this.props.nodeSize || 0,
+        width: this.props.nodeSize || 0,
+      };
+
+      const nodeTypeXlinkHref = Node.getNodeTypeXlinkHref(data, nodeTypes) || '';
+  
+      // get width and height defined on def element
+      const defSvgNodeElement = nodeTypeXlinkHref
+        ? document.querySelector(`defs>${nodeTypeXlinkHref}`)
+        : null;
+      const nodeWidthAttr = defSvgNodeElement
+        ? defSvgNodeElement.getAttribute('width')
+        : 0;
+      const nodeHeightAttr = defSvgNodeElement
+        ? defSvgNodeElement.getAttribute('height')
+        : 0;
+  
+      
+      props.width = nodeWidthAttr ? parseInt(nodeWidthAttr, 10) : props.width;
+      props.height = nodeHeightAttr ? parseInt(nodeHeightAttr, 10) : props.height;
+
+      return {
+        width: props.width,
+        height: props.height
+      }
+  }
   renderShape() {
     const { renderNode, data, nodeTypes, nodeSubtypes, nodeKey } = this.props;
     const { hovered, selected } = this.state;
@@ -308,7 +279,7 @@ class Node extends React.Component<INodeProps, INodeState> {
       Node.getNodeSubtypeXlinkHref(data, nodeSubtypes) || '';
 
     // get width and height defined on def element
-    const defSvgNodeElement: any = nodeTypeXlinkHref
+    const defSvgNodeElement = nodeTypeXlinkHref
       ? document.querySelector(`defs>${nodeTypeXlinkHref}`)
       : null;
     const nodeWidthAttr = defSvgNodeElement
@@ -318,6 +289,7 @@ class Node extends React.Component<INodeProps, INodeState> {
       ? defSvgNodeElement.getAttribute('height')
       : 0;
 
+    
     props.width = nodeWidthAttr ? parseInt(nodeWidthAttr, 10) : props.width;
     props.height = nodeHeightAttr ? parseInt(nodeHeightAttr, 10) : props.height;
 
@@ -332,8 +304,8 @@ class Node extends React.Component<INodeProps, INodeState> {
               className={nodeSubtypeClassName}
               x={-props.width / 2}
               y={-props.height / 2}
-              width={props.width}
-              height={props.height}
+              width={props.width*2}
+              height={props.height*2}
               xlinkHref={nodeSubtypeXlinkHref}
             />
           )}
@@ -374,28 +346,63 @@ class Node extends React.Component<INodeProps, INodeState> {
     );
   }
 
+  handleTextClick(event){
+    console.log(event.target)
+  }
+
   render() {
     const { x, y, hovered, selected } = this.state;
-    const { opacity, id, data } = this.props;
+    const { opacity, id, data, isSelected } = this.props;
     const className = GraphUtils.classNames('node', data.type, {
       hovered,
       selected,
     });
 
     return (
-      <g
-        className={className}
-        onMouseOver={this.handleMouseOver}
-        onMouseOut={this.handleMouseOut}
-        id={id}
-        ref={this.nodeRef}
-        opacity={opacity}
-        transform={`translate(${x}, ${y})`}
-        style={{ transform: `matrix(1, 0, 0, 1, ${x}, ${y})` }}
+
+    <g
+      className={className}
+      onMouseOver={this.handleMouseOver}
+      onMouseOut={this.handleMouseOut}
+      onClick={ this.handleDragEnd }
+      id={id}
+      ref={this.nodeRef}
+      opacity={opacity}
+      transform={`translate(${x}, ${y})`}
+      style={{ transform: `matrix(1, 0, 0, 1, ${x}, ${y})` }}
       >
+        
         {this.renderShape()}
         {this.renderText()}
+        
+        <foreignObject 
+         
+          x={-this.getDimensions().width/2} 
+          y={-this.getDimensions().height/2} 
+          width={this.getDimensions().width*1.5} 
+          height={this.getDimensions().height}>
+
+            <textArea className="text-area"
+                onClick = {this.handleTextClick}
+               
+                style={{
+                  width: "154",
+                  height: "54"
+                }}
+            >
+            {isSelected+ "asdaadasdsdad"}
+            
+            </textArea>
+            <button>
+              <div className="burger-icon"></div>
+              <div className="burger-icon"></div>
+              <div className="burger-icon"></div>
+            </button>
+            
+        </foreignObject>
       </g>
+
+      
     );
   }
 }

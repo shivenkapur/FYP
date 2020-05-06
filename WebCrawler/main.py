@@ -1,8 +1,10 @@
 import webCrawlingSpider as wcs
 import pubSub
 
+
 def callbackURLQueue(message):
-	wcs.main(message)
+    wcs.main(message)
+
 
 # def callbackRelevance(message):
 
