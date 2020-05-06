@@ -3,47 +3,67 @@
 
 from FactHelperFunctions import *
 
-import unicodedata
-from scipy import spatial
-import math
-import ast
 import gensim
 import en_core_web_md
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
+import pubSub
+import json
+
 
 nlp = en_core_web_md.load()
 
-f = open("COVID-sample.txt","r")
-		
-lm = WordNetLemmatizer()
 
-word_set = []
-for line in f:
-	line = line.lower()
-	line = line.replace("\n", "")   
-	line = line.split()
-	print(line)
-	# Lemmatizing and removing stopwords
-	temp = [lm.lemmatize(word) for word in line if not word in set(stopwords.words('english'))]
-	temp =' '.join(temp)
-	if len(temp) != 0:
-		word_set.append(temp)
+def callbackRelevanceCheck(pageText):
+	dataCheck(pageText)
 
-print(word_set)
 
-docs = []
-for para in word_set:
-	doc = nlp(para)
-	docs.append(doc)
-	# print(doc.vector)
+def dataCheck(message):
+	pageText = json.loads(message['data'])
+	print(pageText)
+	pageText = pageText['pageText']
+	pageText = pageText.lower()
+	splittedPageText = pageText.split('\n')
+	lines = list(map(lambda line: line.replace("\n", ""), splittedPageText))
+	lines = list(filter(lambda line: len(line)!=0, splittedPageText))
 
-for i in range(0, len(word_set)):
-	for j in range(i+1, len(word_set)):
-		print(str(docs[i][0]) + " " + str(docs[j][0]))
-		print(docs[i].similarity(docs[j]))
+	lm = WordNetLemmatizer()
+	
+	word_set = []
+	for line in lines:
+		line = line.split()
+		# Lemmatizing and removing stopwords
+		temp = [lm.lemmatize(word) for word in line if not word in set(stopwords.words('english'))]
+		temp =' '.join(temp)
+		if len(temp) != 0:
+			word_set.append(temp)
+	
+	print(word_set)
 
-# print(word_set)
+	query = "Coronavirus Epidemic"
+	query = nlp(query)
+
+	docs = []
+	for para in word_set:
+		doc = nlp(para)
+		docs.append(doc)
+		# print(doc.vector)
+
+	final_list = list(map(lambda x: x.similarity(query), docs))
+	print("Similarityyyyy:")
+	print(final_list)
+
+	final_list = list(filter(lambda x: x.similarity(query) >= 0.7, docs))
+	# if(len(final_list) < 25):
+
+	print("Final Listtttttttttttt:")
+	print(final_list)
+	#pubSub.publish('relevanceOfData', json.dumps({'url': message['url'], 'modifiedPageText': final_list}))
+
+
+if __name__=='__main__':
+	pubSub.subscribe('relevanceOfData', callbackRelevanceCheck)
+
 
 # alpha = 0.5
 

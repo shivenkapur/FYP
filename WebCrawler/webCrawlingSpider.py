@@ -40,12 +40,13 @@ class WebCrawler(scrapy.Spider):
             # print(pageText)
 
             # Publish extracted text to Classifier in order to check its relevance
+            pubSub.publish('relevanceOfData', json.dumps({'url': response.url, 'pageText': pageText}))
 
             # Subscribe the crawler to Classifier for return of relevance result
 
             # Publish related URLs and extracted text to Document Data
-            pubSub.publish('documentData', json.dumps(
-                {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))
+            # pubSub.publish('documentData', json.dumps(
+            #     {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))C
 
             # Publish the extracted hyperlinks to URL queue
 
@@ -57,6 +58,8 @@ class WebCrawler(scrapy.Spider):
 
             if(self.number_of_pages_scraped > 100):		# Stopping condition
                 raise CloseSpider('Sufficient pages scraped')
+                
+                # Send a stopping signal for the subscription of Web Crawler
 
             # Creation of new spiders for a url from URL queue through script
             for url in hyperlinks:
@@ -69,8 +72,6 @@ def main(message):
     # print(message)
     json_data = json.loads(message['data'])
     print(message)
-
-    json_data = json.loads(message['data'])
 
     initialGoogleLinks = []
 

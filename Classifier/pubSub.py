@@ -9,3 +9,5 @@ def subscribe(channel, callback):
     pubsub = redis_client.pubsub()
     pubsub.subscribe(**{channel: callback})
     pubsub.run_in_thread(sleep_time=.01)
+
+
