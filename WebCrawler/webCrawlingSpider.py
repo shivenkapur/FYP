@@ -49,11 +49,7 @@ class WebCrawler(scrapy.Spider):
 
             # Publish to Google Search the new keywords
 
-            if(self.number_of_pages_scraped > 10):		# Stopping condition
-
-                # Send a stopping signal for the subscription of Web Crawler
-                pubSub.publish('startClustering', "")
-                
+            if(self.number_of_pages_scraped > 100):		# Stopping condition
                 raise CloseSpider('Sufficient pages scraped')
        
 
@@ -85,3 +81,5 @@ def main(message):
     d = runner.join()
     d.addBoth(lambda _: reactor.stop())
     reactor.run()
+    # Send a stopping signal for the subscription of Web Crawler
+    pubSub.publish('startClustering', "")

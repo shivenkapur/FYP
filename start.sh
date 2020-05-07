@@ -23,6 +23,12 @@ tell application "Terminal"
     python3 start.py;
     exit"
 end tell
+
+tell application "Terminal"
+    do script "cd /Users/vanshajchadha/Desktop/'my code'/ClassifierShivenTest;
+    python3 start.py;
+    exit"
+end tell
 END
 
 

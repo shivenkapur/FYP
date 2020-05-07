@@ -12,7 +12,7 @@ def callbackURLQueue(message):
 
     passed = False
 
-    print("Similarity: ", similarity)
+    print("Similarity: " + str(similarity))
     if similarity > 0.2:
         passed = True
 
@@ -22,7 +22,7 @@ def callbackURLQueue(message):
             "document": json_data["document"],
             "linkedTo": json_data["linkedTo"],
             "classify": passed,
-            "similarity": similarity,
+            "similarity": str(similarity),
             "query": json_data["query"]
         }
     ))
