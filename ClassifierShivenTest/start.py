@@ -4,7 +4,7 @@ import pubSub
 
 
 def callbackURLQueue(message):
-    print(message)
+    #print(message)
     json_data = json.loads(message["data"])
     sentences = [json_data["query"], json_data["document"]]
 
@@ -13,7 +13,7 @@ def callbackURLQueue(message):
     passed = False
 
     print("Similarity: " + str(similarity))
-    if similarity > 0.2:
+    if similarity > 0:
         passed = True
 
     pubSub.publish('classificationResult', json.dumps(

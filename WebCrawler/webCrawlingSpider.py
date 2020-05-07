@@ -40,7 +40,7 @@ class WebCrawler(scrapy.Spider):
             # print(pageText)
 
             # Publish extracted text to Classifier in order to check its relevance
-            pubSub.publish('classifyDocument', json.dumps({'url': response.url, 'query': "Features of Node.js", 'document': pageText, 'linkedTo': hyperlinks}))
+            pubSub.publish('classifyDocument', json.dumps({'url': response.url, 'query': "The University of Hong Kong", 'document': pageText, 'linkedTo': hyperlinks}))
 
             print(response.url)
             # Publish the extracted hyperlinks to URL queue
@@ -49,10 +49,9 @@ class WebCrawler(scrapy.Spider):
 
             # Publish to Google Search the new keywords
 
-            if(self.number_of_pages_scraped > 100):		# Stopping condition
+            if(self.number_of_pages_scraped > 10):		# Stopping condition
                 raise CloseSpider('Sufficient pages scraped')
        
-
             # Creation of new spiders for a url from URL queue through script
             for url in hyperlinks:
                 self.number_of_pages_scraped += 1
