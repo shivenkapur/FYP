@@ -5,7 +5,7 @@ function start(){
     api.getUrlLinkage();
     api.getUrlKeywords();
 
-    api.getCentralKeywords();
+    api.startClustering();
     pubsub.publish("startClustering", "jklj");
 }   
 

@@ -65,7 +65,7 @@ export default {
         console.log("Subscribed to Url Keywords");
     },
 
-    getCentralKeywords: async function(){
+    startClustering: async function(){
 
         pubsub.subscribe("startClustering", async (channel, message) => {
             let statements = stackTransactions([createLouvainClusters(), getCommunities()]);

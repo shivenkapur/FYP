@@ -8,8 +8,21 @@ import pubsub from 'pubsub';
 
 async function start(){
 
-  
-  pubsub.publish("a", "jklj");
+    let result = results[1].data;
+    
+    let communities = [];
+    let rowDict = result[0];
+    communities.push(rowDict.row[0]);
+
+    //for(let resultIndex in result){
+    //  let rowDict = result[resultIndex];
+    //  communities.push(rowDict.row[0]);
+    //}
+    
+    sendTransactions(stackTransactions([getCommunityUrls(communities)]) ,function(err, res){
+      console.log(res.body.results[0].data);
+    })
+  }); 
 
 }
 

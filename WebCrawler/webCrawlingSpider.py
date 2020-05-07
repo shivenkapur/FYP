@@ -7,6 +7,7 @@ import requests
 import threading
 from twisted.internet import reactor
 import json
+import asyncio
 import pubSub
 
 
@@ -17,7 +18,7 @@ class WebCrawler(scrapy.Spider):
     allowed_domains = []
     number_of_pages_scraped = 0
 
-    def parse(self, response):
+    async def parse(self, response):
 
         if(response.status == 200):
             # Extract the hrefs from initial google results
@@ -39,14 +40,15 @@ class WebCrawler(scrapy.Spider):
             pageText = soup.get_text()
             # print(pageText)
 
-            # Publish extracted text to Classifier in order to check its relevance TO DO
+            # Publish extracted text to Classifier in order to check its relevance
+            pubSub.publish('relevanceOfData', json.dumps({'url': response.url, 'pageText': pageText}))
 
             # Subscribe the crawler to Classifier for return of relevance result
             #TO DO
 
             # Publish related URLs and extracted text to Document Data
             pubSub.publish('documentData', json.dumps(
-                {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))
+                 {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))
 
             print(response.url)
             # Publish the extracted hyperlinks to URL queue
@@ -57,6 +59,8 @@ class WebCrawler(scrapy.Spider):
 
             if(self.number_of_pages_scraped > 10):		# Stopping condition
                 raise CloseSpider('Sufficient pages scraped')
+                
+                # Send a stopping signal for the subscription of Web Crawler
 
             # Creation of new spiders for a url from URL queue through script
             for url in hyperlinks:
@@ -66,7 +70,10 @@ class WebCrawler(scrapy.Spider):
 
 def main(message):
 
+    # print(message)
     json_data = json.loads(message['data'])
+    print(message)
+
     initialGoogleLinks = []
 
     for link in json_data:
