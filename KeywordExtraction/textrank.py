@@ -118,6 +118,7 @@ class TextRank4Keyword():
 
         # Get token_pairs from windows
         token_pairs = self.get_token_pairs(window_size, sentences)
+        print(token_pairs)
 
         # Get normalized matrix
         g = self.get_matrix(vocab, token_pairs)

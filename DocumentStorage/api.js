@@ -58,4 +58,8 @@ export default {
         });
         console.log("Subscribed to Url Keywords");
     },
+
+    getCentralKeywords: async function(){
+        
+    }
 }

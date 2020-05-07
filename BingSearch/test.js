@@ -7,7 +7,7 @@ export default async function start(searchKeywords){
         console.log(channel, message);
     });
     
-    let data = await api.getAllMetaData('AWS');
+    let data = await api.getAllMetaData('The University of Hong Kong');
     
 }
 
