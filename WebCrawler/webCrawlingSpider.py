@@ -44,6 +44,7 @@ class WebCrawler(scrapy.Spider):
             pubSub.publish('relevanceOfData', json.dumps({'url': response.url, 'pageText': pageText}))
 
             # Subscribe the crawler to Classifier for return of relevance result
+            #TO DO
 
             # Publish related URLs and extracted text to Document Data
             pubSub.publish('documentData', json.dumps(
