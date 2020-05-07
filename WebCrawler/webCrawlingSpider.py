@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import scrapy
 from scrapy.exceptions import CloseSpider
 from scrapy.crawler import CrawlerRunner
@@ -7,7 +6,6 @@ import requests
 import threading
 from twisted.internet import reactor
 import json
-import asyncio
 import pubSub
 
 
@@ -18,7 +16,7 @@ class WebCrawler(scrapy.Spider):
     allowed_domains = []
     number_of_pages_scraped = 0
 
-    async def parse(self, response):
+    def parse(self, response):
 
         if(response.status == 200):
             # Extract the hrefs from initial google results
@@ -41,14 +39,8 @@ class WebCrawler(scrapy.Spider):
             # print(pageText)
 
             # Publish extracted text to Classifier in order to check its relevance
-            pubSub.publish('relevanceOfData', json.dumps({'url': response.url, 'pageText': pageText}))
-
-            # Subscribe the crawler to Classifier for return of relevance result
-            #TO DO
-
-            # Publish related URLs and extracted text to Document Data
-            pubSub.publish('documentData', json.dumps(
-                 {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))
+            pubSub.publish('classifyDocument', json.dumps(
+                {'url': response.url, 'query': "Features of Node.js", 'document': pageText, 'linkedTo': hyperlinks}))
 
             print(response.url)
             # Publish the extracted hyperlinks to URL queue
@@ -57,10 +49,8 @@ class WebCrawler(scrapy.Spider):
 
             # Publish to Google Search the new keywords
 
-            if(self.number_of_pages_scraped > 10):		# Stopping condition
+            if(self.number_of_pages_scraped > 100):		# Stopping condition
                 raise CloseSpider('Sufficient pages scraped')
-                
-                # Send a stopping signal for the subscription of Web Crawler
 
             # Creation of new spiders for a url from URL queue through script
             for url in hyperlinks:
@@ -90,3 +80,5 @@ def main(message):
     d = runner.join()
     d.addBoth(lambda _: reactor.stop())
     reactor.run()
+    # Send a stopping signal for the subscription of Web Crawler
+    pubSub.publish('startClustering', "")

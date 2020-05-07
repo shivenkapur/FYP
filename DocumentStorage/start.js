@@ -6,7 +6,6 @@ function start(){
     api.getUrlKeywords();
 
     api.startClustering();
-    pubsub.publish("startClustering", "jklj");
 }   
 
 start();

@@ -18,12 +18,12 @@ def callbackURLQueue(message):
 
     pubSub.publish('classificationResult', json.dumps(
         {
-            "url": json_data['url'],
-            "document": json_data["document"]
+            "url": json_data["url"],
+            "document": json_data["document"],
             "linkedTo": json_data["linkedTo"],
-            "query": json_data["query"]
+            "query": json_data["query"],
             "classify": passed,
-            "similarity": similarity
+            "similarity": str(similarity)
         }
     ))
     print(json_data['url'], passed)
@@ -36,7 +36,8 @@ if __name__ == '__main__':
         {
             "query": "Node.js",
             "document": "As an asynchronous event-driven JavaScript runtime,",
-            "url": "asdasd"
+            "url": "asdasd",
+            "linkedTo": "jasldj",
         }
     ))
 
@@ -44,7 +45,8 @@ if __name__ == '__main__':
         {
             "query": "Corona",
             "document": "As an asynchronous event-driven JavaScript runtime,",
-            "url": "asdasd"
+            "url": "asdasd",
+            "linkedTo": "jasldj"
         }
     ))
 
