@@ -7,7 +7,7 @@ export default async function start(searchKeywords){
         console.log(channel, message);
     });
     
-    let data = await api.getAllLinks('Features of Node.js');
+    let data = await api.getAllLinks('Features of Nodejs');
 
     console.log(data)
     

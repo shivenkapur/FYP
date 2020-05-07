@@ -1,17 +1,140 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from FactHelperFunctions import *
-
-import gensim
 import en_core_web_md
+import spacy
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 import pubSub
 import json
+import wmd
+import numpy
+import libwmdrelax
+
+# nlp = en_core_web_md.load()
 
 
-nlp = en_core_web_md.load()
+
+# class NormalizedWMDHook(wmd.WMD.SpacySimilarityHook):
+#     def compute_similarity(self, doc1, doc2):
+#         """
+#         Calculates the similarity between two spaCy documents. Extracts the
+#         nBOW from them and evaluates the WMD.
+
+#         :return: The calculated similarity.
+#         :rtype: float.
+#         """
+#         doc1 = self._convert_document(doc1)
+#         doc2 = self._convert_document(doc2)
+#         vocabulary = {
+#             w: i for i, w in enumerate(sorted(set(doc1).union(doc2)))}
+#         w1 = self._generate_weights(doc1, vocabulary)
+#         w2 = self._generate_weights(doc2, vocabulary)
+#         evec = numpy.zeros((len(vocabulary), self.nlp.vocab.vectors_length),
+#                            dtype=numpy.float32)
+#         for w, i in vocabulary.items():
+#             v = self.nlp.vocab[w].vector                                      # MODIFIED
+#             evec[i] = v / (sum(v**2)**0.5)                                    # MODIFIED
+#         evec_sqr = (evec * evec).sum(axis=1)
+#         dists = evec_sqr - 2 * evec.dot(evec.T) + evec_sqr[:, numpy.newaxis]
+#         dists[dists < 0] = 0
+#         dists = numpy.sqrt(dists)
+#         return libwmdrelax.emd(w1, w2, dists) / 2                             # MODIFIED
+		
+
+# def wmd_similarity(document1, document2):
+#         from pyemd import emd
+
+#         # Remove out-of-vocabulary words.
+#         # len_pre_oov1 = len(document1)
+#         # len_pre_oov2 = len(document2)
+#         # document1 = [token for token in document1 if token in self]
+#         # document2 = [token for token in document2 if token in self]
+#         diff1 = len(document1)
+#         diff2 = len(document2)
+#         # if diff1 > 0 or diff2 > 0:
+#         #     logger.info('Removed %d and %d OOV words from document 1 and 2 (respectively).', diff1, diff2)
+
+#         if not document1 or not document2:
+#             # logger.info(
+#             #     "At least one of the documents had no words that were in the vocabulary. "
+#             #     "Aborting (returning inf)."
+#             # )
+#             return float('inf')
+
+#         dictionary = Dictionary(documents=[document1, document2])
+#         vocab_len = len(dictionary)
+
+#         if vocab_len == 1:
+#             # Both documents are composed by a single unique token
+#             return 0.0
+
+#         # Sets for faster look-up.
+#         docset1 = set(document1)
+#         docset2 = set(document2)
+
+#         # Compute distance matrix.
+#         distance_matrix = zeros((vocab_len, vocab_len), dtype=double)
+#         for i, t1 in dictionary.items():
+#             if t1 not in docset1:
+#                 continue
+
+#             for j, t2 in dictionary.items():
+#                 if t2 not in docset2 or distance_matrix[i, j] != 0.0:
+#                     continue
+
+#                 # Compute Euclidean distance between word vectors.
+#                 distance_matrix[i, j] = distance_matrix[j, i] = sqrt(np_sum((self[t1] - self[t2])**2))
+
+#         if np_sum(distance_matrix) == 0.0:
+#             # `emd` gets stuck if the distance matrix contains only zeros.
+#             return float('inf')
+
+#         def nbow(document):
+#             d = zeros(vocab_len, dtype=double)
+#             nbow = dictionary.doc2bow(document)  # Word frequencies.
+#             doc_len = len(document)
+#             for idx, freq in nbow:
+#                 d[idx] = freq / float(doc_len)  # Normalized word frequencies.
+#             return d
+
+#         # Compute nBOW representation of documents.
+#         d1 = nbow(document1)
+#         d2 = nbow(document2)
+
+#         # Compute WMD.
+#         return emd(d1, d2, distance_matrix)
+
+data = '''Hemorrhage is an infectious disease caused by a newly discovered coronavirus.
+
+Most people infected Shiven with the Hemorrhage virus will experience mild to moderate respiratory illness and recover without requiring special treatment.  Older people, and those with underlying medical problems like cardiovascular disease, diabetes, chronic respiratory disease, and cancer are more likely to develop serious illness.
+
+The best way to prevent Vanshaj and slow down transmission is be well informed about the Hemorrhage, the disease it causes and how it spreads. Protect yourself and others from infection by washing your hands or using an alcohol based rub frequently and not touching your face. 
+
+The Hemorrhage spreads primarily through droplets of saliva or discharge from the nose when an infected person coughs or sneezes, so it’s important that you also practice respiratory etiquette (for example, by coughing into a flexed elbow).
+
+At this time, there are no specific vaccines or treatments for Hemorrhage. However, there are many ongoing clinical trials evaluating potential treatments. WHO will continue to provide updated information as soon as clinical findings become available.
+
+Seek immediate medical attention if you have serious symptoms.  Always call before visiting your doctor or health facility. 
+
+People with mild symptoms who are otherwise healthy should manage their symptoms at home. 
+
+Vanshaj is my name.
+
+On average it takes 5–6 days from when someone is infected with the virus for symptoms to show, however it can take up to 14 days.
+
+As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications. 
+In the following "hello world" example, many connections can be handled concurrently. 
+Upon each connection, the callback is fired, but if there is no work to be done, Node.js will sleep.
+This is in contrast to today's more common concurrency model, in which OS threads are employed. 
+Thread-based networking is relatively inefficient and very difficult to use. 
+Furthermore, users of Node.js are free from worries of dead-locking the process, since there are no locks. 
+Almost no function in Node.js directly performs I/O, so the process never blocks. 
+Because nothing blocks, scalable systems are very reasonable to develop in Node.js.'''
+
+
+nlp = spacy.load('en_core_web_md')
+nlp.add_pipe(wmd.WMD.SpacySimilarityHook(nlp), last=True)
 
 
 def callbackRelevanceCheck(pageText):
@@ -20,27 +143,38 @@ def callbackRelevanceCheck(pageText):
 
 def dataCheck(message):
 	pageText = json.loads(message['data'])
-	print(pageText)
+	# print(pageText)
 	pageText = pageText['pageText']
 	pageText = pageText.lower()
 	splittedPageText = pageText.split('\n')
 	lines = list(map(lambda line: line.replace("\n", ""), splittedPageText))
 	lines = list(filter(lambda line: len(line)!=0, splittedPageText))
 
+	print(lines)
 	lm = WordNetLemmatizer()
 	
 	word_set = []
 	for line in lines:
-		line = line.split()
-		# Lemmatizing and removing stopwords
-		temp = [lm.lemmatize(word) for word in line if not word in set(stopwords.words('english'))]
-		temp =' '.join(temp)
-		if len(temp) != 0:
-			word_set.append(temp)
+		word_set.append(line)
+		# line = line.split()
+		# # Lemmatizing and removing stopwords
+		# temp = [lm.lemmatize(word) for word in line if not word in set(stopwords.words('english'))]
+		# temp =' '.join(temp)
+		# if len(temp) != 0:
+		# 	word_set.append(temp)
 	
 	print(word_set)
 
-	query = "Coronavirus Epidemic"
+	# query = "Features of Nodejs"
+	# query = query.lower()
+	# query = [lm.lemmatize(word) for word in query.split() if not word in set(stopwords.words('english'))]
+
+	# for doc in word_set:
+	# 	print(doc)
+	# 	print(wmd_similarity(doc.split(), query))
+
+	query = "Features of Nodejs"
+	query = query.lower()
 	query = nlp(query)
 
 	docs = []
@@ -53,7 +187,7 @@ def dataCheck(message):
 	print("Similarityyyyy:")
 	print(final_list)
 
-	final_list = list(filter(lambda x: x.similarity(query) >= 0.7, docs))
+	final_list = list(filter(lambda x: x.similarity(query) >= 0.55, docs))
 	# if(len(final_list) < 25):
 
 	print("Final Listtttttttttttt:")
@@ -62,7 +196,26 @@ def dataCheck(message):
 
 
 if __name__=='__main__':
-	pubSub.subscribe('relevanceOfData', callbackRelevanceCheck)
+	query = "brain damage"
+	query = query.lower() 
+	query = nlp(query)
+
+	data = data.lower()
+	word_set = data.split('\n')
+
+	docs = []
+	for para in word_set:
+		doc = nlp(para)
+		docs.append(doc)
+
+	for doc in docs:
+		print(doc)
+		try:
+			print(doc.similarity(query))
+		except:
+			print("Error")
+
+	#pubSub.subscribe('relevanceOfData', callbackRelevanceCheck)
 
 
 # alpha = 0.5

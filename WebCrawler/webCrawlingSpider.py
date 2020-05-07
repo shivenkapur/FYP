@@ -46,7 +46,7 @@ class WebCrawler(scrapy.Spider):
 
             # Publish related URLs and extracted text to Document Data
             # pubSub.publish('documentData', json.dumps(
-            #     {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))C
+            #      {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))
 
             print(response.url)
             # Publish the extracted hyperlinks to URL queue
