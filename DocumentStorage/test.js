@@ -6,7 +6,7 @@ import getCommunities from './storageFunctions/getCommunities/getCommunities.js'
 import getCommunityUrls from './storageFunctions/getCommunityUrls/getCommunityUrls.js';
 async function start(){
 
-  let statements = stackTransactions([createLouvainClusters(), getCommunities("13", "12")]);
+  let statements = stackTransactions([createLouvainClusters(), getCommunities()]);
   sendTransactions(statements, function(err, res) {
     let results = res.body.results;
 
@@ -23,7 +23,7 @@ async function start(){
 
     
     sendTransactions(stackTransactions([getCommunityUrls(communities)]) ,function(err, res){
-      console.log(res.body.results[0].data[0], res.body.results[0].data[1], res.body.results[0].data[15]);
+      console.log(res.body.results[0].data);
     })
   }); 
 

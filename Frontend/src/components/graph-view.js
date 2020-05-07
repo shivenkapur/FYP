@@ -9,6 +9,7 @@ import Edge from './edge';
 import GraphControls from './graph-controls';
 import GraphUtils from '../utilities/graph-util';
 import Node from './node';
+import DataStore from '../stores/DataStore.js';
 
 class GraphView extends React.Component{
   static defaultProps = {
@@ -798,6 +799,7 @@ class GraphView extends React.Component{
       },
     };
 
+    DataStore.selectedNodeChanged(nodeId);
     this.setState(newState);
 
     if (!creatingEdge) {
