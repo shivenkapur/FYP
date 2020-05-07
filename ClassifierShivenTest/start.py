@@ -16,33 +16,36 @@ def callbackURLQueue(message):
     if similarity > 0.2:
         passed = True
 
-    pubSub.publish('somethingelse', json.dumps(
+    pubSub.publish('classificationResult', json.dumps(
         {
-            "url": json_data['url'],
+            "url": json_data["url"],
+            "document": json_data["document"],
+            "linkedTo": json_data["linkedTo"],
             "classify": passed,
-            "similarity": similarity
+            "similarity": similarity,
+            "query": json_data["query"]
         }
     ))
-    print(json_data['url'], passed)
+    print(json_data["url"], passed)
 
 
 if __name__ == '__main__':
 
     pubSub.subscribe('classifyDocument', callbackURLQueue)
-    pubSub.publish('classifyDocument', json.dumps(
-        {
-            "query": "Node.js",
-            "document": "As an asynchronous event-driven JavaScript runtime,",
-            "url": "asdasd"
-        }
-    ))
-
-    pubSub.publish('classifyDocument', json.dumps(
-        {
-            "query": "Corona",
-            "document": "As an asynchronous event-driven JavaScript runtime,",
-            "url": "asdasd"
-        }
-    ))
-
     print("Subscribed to Classify Document")
+
+    # pubSub.publish('classifyDocument', json.dumps(
+    #     {
+    #         "query": "Node.js",
+    #         "document": "As an asynchronous event-driven JavaScript runtime,",
+    #         "url": "asdasd"
+    #     }
+    # ))
+
+    # pubSub.publish('classifyDocument', json.dumps(
+    #     {
+    #         "query": "Corona",
+    #         "document": "As an asynchronous event-driven JavaScript runtime,",
+    #         "url": "asdasd"
+    #     }
+    # ))
