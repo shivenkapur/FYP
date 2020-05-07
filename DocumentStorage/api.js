@@ -73,7 +73,7 @@ export default {
 
             sendTransactions(statements, function(err, res) {
                 let results = res.body.results;
-
+                console.log(results)
                 let result = results[1].data;
                 
                 let communities = [];

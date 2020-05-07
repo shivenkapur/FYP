@@ -4,7 +4,6 @@ import pubsub from 'pubsub';
 function start(){
     api.getUrlLinkage();
     api.getUrlKeywords();
-
     api.startClustering();
 }   
 

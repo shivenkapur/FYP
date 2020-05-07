@@ -12,7 +12,7 @@ def callbackURLQueue(message):
 
     passed = False
 
-    print("Similarity: ", similarity)
+    print("Similarity: " + str(similarity))
     if similarity > 0.2:
         passed = True
 
@@ -26,13 +26,14 @@ def callbackURLQueue(message):
             "similarity": str(similarity)
         }
     ))
-    print(json_data['url'], passed)
+    print(json_data["url"], passed)
 
 
 if __name__ == '__main__':
 
     pubSub.subscribe('classifyDocument', callbackURLQueue)
-    pubSub.publish('classifyDocument', json.dumps(
+
+    """pubSub.publish('classifyDocument', json.dumps(
         {
             "query": "Node.js",
             "document": "As an asynchronous event-driven JavaScript runtime,",
@@ -48,6 +49,6 @@ if __name__ == '__main__':
             "url": "asdasd",
             "linkedTo": "jasldj"
         }
-    ))
+    ))"""
 
     print("Subscribed to Classify Document")
