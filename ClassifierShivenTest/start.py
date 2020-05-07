@@ -16,9 +16,12 @@ def callbackURLQueue(message):
     if similarity > 0.2:
         passed = True
 
-    pubSub.publish('somethingelse', json.dumps(
+    pubSub.publish('classificationResult', json.dumps(
         {
             "url": json_data['url'],
+            "document": json_data["document"]
+            "linkedTo": json_data["linkedTo"],
+            "query": json_data["query"]
             "classify": passed,
             "similarity": similarity
         }

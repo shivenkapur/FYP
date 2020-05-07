@@ -1,0 +1,21 @@
+{
+  "name": "cluster-analysis",
+  "version": "1.0.0",
+  "description": "https://neo4j.com/graph-data-science-library/",
+  "main": "start.js",
+  "scripts": {
+    "dev": "npx babel-node --presets @babel/env start.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pubsub": "file:../PubSub/prod"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/plugin-transform-runtime": "^7.9.0"
+  }
+}

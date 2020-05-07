@@ -13,6 +13,12 @@ tell application "Terminal"
 end tell
 
 tell application "Terminal"
+    do script "cd /Users/anujkapur/Documents/GitHub/FYP/Cluster;
+    npm run dev;
+    exit"
+end tell
+
+tell application "Terminal"
     do script "cd /Users/anujkapur/Documents/GitHub/FYP/KeywordExtraction;
     python3 start.py;
     exit"
