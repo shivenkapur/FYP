@@ -4,7 +4,7 @@ export default function createKeywordRelationship(url, keyword){
         'statement' : `
             MATCH (doc:Document) WHERE doc.id = $url
             MATCH (keyword:Keyword) WHERE keyword.id = $keyword
-            MERGE (doc)-[r:ContainsKeyword]->(keyword)
+            MERGE (doc)-[r:ContainsKeyword]-(keyword)
             RETURN doc, keyword, r;
         `,
         "parameters": { "url": `${url}` , "keyword": `${keyword}`}

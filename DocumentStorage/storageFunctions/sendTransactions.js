@@ -1,6 +1,6 @@
 var request = require("request");
 
-export default async function sendTransactions(statements){
+export default async function sendTransactions(statements, callback = (err,res) => {}){
 
     var txUrl = "http://localhost:7474/db/data/transaction/commit";
 
@@ -12,7 +12,7 @@ export default async function sendTransactions(statements){
             }
         },
         function(err,res) {
-            console.log(res.body)
+            callback(err,res);
         }
     );
 }

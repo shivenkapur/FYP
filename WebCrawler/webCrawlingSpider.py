@@ -7,6 +7,7 @@ import requests
 import threading
 from twisted.internet import reactor
 import json
+import asyncio
 import pubSub
 
 
@@ -17,7 +18,7 @@ class WebCrawler(scrapy.Spider):
     allowed_domains = []
     number_of_pages_scraped = 0
 
-    def parse(self, response):
+    async def parse(self, response):
 
         if(response.status == 200):
             # Extract the hrefs from initial google results
@@ -45,8 +46,8 @@ class WebCrawler(scrapy.Spider):
             # Subscribe the crawler to Classifier for return of relevance result
 
             # Publish related URLs and extracted text to Document Data
-            # pubSub.publish('documentData', json.dumps(
-            #      {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))
+            pubSub.publish('documentData', json.dumps(
+                 {'url': response.url, 'linkedTo': hyperlinks, 'pageText': pageText}))
 
             print(response.url)
             # Publish the extracted hyperlinks to URL queue
