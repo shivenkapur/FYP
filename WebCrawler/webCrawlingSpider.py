@@ -39,9 +39,10 @@ class WebCrawler(scrapy.Spider):
             pageText = soup.get_text()
             # print(pageText)
 
-            # Publish extracted text to Classifier in order to check its relevance
+            # Publish extracted text to Classifier in order to check its relevance TO DO
 
             # Subscribe the crawler to Classifier for return of relevance result
+            #TO DO
 
             # Publish related URLs and extracted text to Document Data
             pubSub.publish('documentData', json.dumps(
