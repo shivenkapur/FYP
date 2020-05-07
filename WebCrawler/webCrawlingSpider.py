@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import scrapy
 from scrapy.exceptions import CloseSpider
 from scrapy.crawler import CrawlerRunner
