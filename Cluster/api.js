@@ -12,6 +12,8 @@ export default {
                 console.log(dataPoint.row, dataPoint.meta);
             }
 
+            
+
         });
         console.log("Subscribed to Cluster Documents");
     },
